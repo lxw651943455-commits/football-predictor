@@ -10,8 +10,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
-const PORT = 5000;
-const THE_ODDS_API_KEY = '4091b3b46933315f5e88bf3cf953b3b4';
+const PORT = process.env.PORT || 5000;
+const THE_ODDS_API_KEY = process.env.THE_ODDS_API_KEY || '4091b3b46933315f5e88bf3cf953b3b4';
 
 // Middleware
 app.use(cors({

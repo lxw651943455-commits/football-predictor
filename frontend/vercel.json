@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://football-predictor-backend.up.railway.app/api/:path*"
+    }
+  ]
+}
