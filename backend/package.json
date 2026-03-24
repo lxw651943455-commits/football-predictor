@@ -5,8 +5,9 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
+    "start": "node server-simple.js",
+    "dev": "nodemon server-simple.js",
+    "start-full": "node server.js",
     "migrate": "node src/utils/migrate.js",
     "seed": "node src/utils/seed.js",
     "test": "jest"
