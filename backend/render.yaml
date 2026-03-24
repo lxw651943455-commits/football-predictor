@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: football-predictor-backend
+    env: node
+    buildCommand: npm install
+    startCommand: node server-simple.js
+    envVars:
+      - key: NODE_VERSION
+        value: 18
+    healthCheckPath: /health
