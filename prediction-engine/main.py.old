@@ -1,0 +1,402 @@
+"""
+Flask API Server for Prediction Engine
+Serves the nine-dimensional prediction model as a REST API
+"""
+
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from datetime import datetime
+import os
+from typing import Dict, Any
+import asyncio
+
+from models.nine_dimensions import NineDimensionPredictor, MatchData, quick_predict
+from services.api_fetcher import APIFetcher, create_fetcher_from_env
+from utils.smart_data_generator import SmartDataGenerator
+from services.scraper_integrator import ScraperDataIntegrator
+
+# Initialize Flask app
+app = Flask(__name__)
+CORS(app)
+
+# Initialize API fetcher (lazy load)
+api_fetcher: APIFetcher = None
+predictor: NineDimensionPredictor = None
+
+
+def get_api_fetcher() -> APIFetcher:
+    """Get or initialize API fetcher"""
+    global api_fetcher
+    if api_fetcher is None:
+        api_fetcher = create_fetcher_from_env()
+    return api_fetcher
+
+
+def get_predictor() -> NineDimensionPredictor:
+    """Get or initialize predictor"""
+    global predictor
+    if predictor is None:
+        predictor = NineDimensionPredictor()
+    return predictor
+
+
+@app.route('/health', methods=['GET'])
+def health_check():
+    """Health check endpoint"""
+    return jsonify({
+        'status': 'healthy',
+        'timestamp': datetime.now().isoformat(),
+        'service': 'prediction-engine'
+    })
+
+
+@app.route('/api/predict', methods=['POST'])
+def predict_match():
+    """
+    Generate prediction for a match
+
+    Expected JSON body:
+    {
+        "home_team": "Arsenal",
+        "away_team": "Chelsea",
+        "league": "Premier League",
+        "match_date": "2024-03-15T15:00:00",
+        "home_odds": 2.10,
+        "draw_odds": 3.40,
+        "away_odds": 3.60
+    }
+    """
+    print("[ENTRY] predict_match function called!")  # DEBUG
+    try:
+        data = request.get_json()
+
+        # Validate required fields
+        required_fields = ['home_team', 'away_team', 'home_odds', 'draw_odds', 'away_odds']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({'error': f'Missing required field: {field}'}), 400
+
+        # Parse match date
+        match_date = datetime.fromisoformat(data['match_date']) if 'match_date' in data else datetime.now()
+
+        # Create predictor with custom weights if provided
+        predictor = get_predictor()
+        if 'weights' in data:
+            predictor = NineDimensionPredictor(weights=data['weights'])
+
+        # Enrich data with SmartDataGenerator if not provided
+        # This provides intelligent defaults based on team strength ratings
+        base_match_data = {
+            'home_team': data['home_team'],
+            'away_team': data['away_team'],
+            'league': data.get('league', 'Unknown'),
+            'home_odds': data['home_odds'],
+            'draw_odds': data['draw_odds'],
+            'away_odds': data['away_odds'],
+        }
+
+        # Only use SmartDataGenerator if form/H2H data is not provided
+        use_smart_data = (
+            not data.get('home_form') or
+            not data.get('away_form') or
+            data.get('home_league_position') is None or
+            data.get('away_league_position') is None
+        )
+
+        print(f"[DEBUG] use_smart_data: {use_smart_data}")  # Debug output
+        print(f"[DEBUG] home_form from request: {data.get('home_form')}")
+        print(f"[DEBUG] away_form from request: {data.get('away_form')}")
+
+        if use_smart_data:
+            print("[DEBUG] Calling ScraperDataIntegrator (爬虫数据)...")
+            # 使用爬虫获取真实数据（替代SmartDataGenerator）
+            integrator = ScraperDataIntegrator()
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+
+            try:
+                enriched_data = loop.run_until_complete(
+                    integrator.fetch_complete_match_data(
+                        home_team=data['home_team'],
+                        away_team=data['away_team'],
+                        home_odds=data['home_odds'],
+                        draw_odds=data['draw_odds'],
+                        away_odds=data['away_odds'],
+                        league=data.get('league', 'Premier League')
+                    )
+                )
+                print(f"[DEBUG] Enriched data received!")
+                print(f"[DEBUG] home_form: {enriched_data.get('home_form')}")
+                print(f"[DEBUG] away_form: {enriched_data.get('away_form')}")
+                print(f"[DEBUG] home_league_position: {enriched_data.get('home_league_position')}")
+                print(f"[DEBUG] away_league_position: {enriched_data.get('away_league_position')}")
+                print(f"[DEBUG] home_home_record: {enriched_data.get('home_home_record')}")
+                print(f"[DEBUG] away_away_record: {enriched_data.get('away_away_record')}")
+            finally:
+                loop.close()
+
+            # Use enriched data as defaults
+            home_form = data.get('home_form') or enriched_data.get('home_form', [])
+            away_form = data.get('away_form') or enriched_data.get('away_form', [])
+            home_league_position = data.get('home_league_position') or enriched_data.get('home_league_position')
+            away_league_position = data.get('away_league_position') or enriched_data.get('away_league_position')
+            home_matches_last_14_days = data.get('home_matches_last_14_days') or enriched_data.get('home_matches_last_14_days', 0)
+            away_matches_last_14_days = data.get('away_matches_last_14_days') or enriched_data.get('away_matches_last_14_days', 0)
+
+            # Get enriched additional data
+            home_injuries = enriched_data.get('home_injuries', [])
+            away_injuries = enriched_data.get('away_injuries', [])
+            h2h_matches = enriched_data.get('h2h_matches', [])
+            home_home_record = enriched_data.get('home_home_record')
+            away_away_record = enriched_data.get('away_away_record')
+            referee = enriched_data.get('referee')
+            home_manager = enriched_data.get('home_manager')
+            away_manager = enriched_data.get('away_manager')
+            is_title_race = enriched_data.get('is_title_race', False)
+            is_relegation_fight = enriched_data.get('is_relegation_fight', False)
+        else:
+            # Use provided data
+            home_form = data.get('home_form', [])
+            away_form = data.get('away_form', [])
+            home_league_position = data.get('home_league_position')
+            away_league_position = data.get('away_league_position')
+            home_matches_last_14_days = data.get('home_matches_last_14_days', 0)
+            away_matches_last_14_days = data.get('away_matches_last_14_days', 0)
+            home_injuries = []
+            away_injuries = []
+            h2h_matches = []
+            home_home_record = None
+            away_away_record = None
+            referee = None
+            home_manager = None
+            away_manager = None
+            is_title_race = False
+            is_relegation_fight = False
+
+        # Create match data object
+        match_data = MatchData(
+            home_team=data['home_team'],
+            away_team=data['away_team'],
+            league=data.get('league', 'Unknown'),
+            match_date=match_date,
+            home_odds=data['home_odds'],
+            draw_odds=data['draw_odds'],
+            away_odds=data['away_odds'],
+            opening_home_odds=data.get('opening_home_odds'),
+            opening_draw_odds=data.get('opening_draw_odds'),
+            opening_away_odds=data.get('opening_away_odds'),
+            home_form=home_form,
+            away_form=away_form,
+            home_league_position=home_league_position,
+            away_league_position=away_league_position,
+            is_cup_match=data.get('is_cup_match', False),
+            home_matches_last_14_days=home_matches_last_14_days,
+            away_matches_last_14_days=away_matches_last_14_days,
+            home_injuries=home_injuries,
+            away_injuries=away_injuries,
+            h2h_matches=h2h_matches,
+            home_home_record=home_home_record,
+            away_away_record=away_away_record,
+            referee=referee,
+            home_manager=home_manager,
+            away_manager=away_manager,
+            is_title_race=is_title_race,
+            is_relegation_fight=is_relegation_fight,
+        )
+
+        # Generate prediction
+        result = predictor.predict(match_data)
+
+        # Convert to JSON-serializable format
+        return jsonify({
+            'home_team': result.home_team,
+            'away_team': result.away_team,
+            'match_date': result.match_date.isoformat(),
+            'dimension_scores': result.dimension_scores,
+            'home_win_probability': result.home_win_probability,
+            'draw_probability': result.draw_probability,
+            'away_win_probability': result.away_win_probability,
+            'predicted_score': result.predicted_score,
+            'predicted_winner': result.predicted_winner,
+            'overall_confidence': result.overall_confidence,
+            'key_insights': result.key_insights,
+            'risk_factors': result.risk_factors,
+            'recommended_bet': result.recommended_bet,
+            'bet_confidence': result.bet_confidence,
+        })
+
+    except Exception as e:
+        import traceback
+        print(f"[ERROR] Exception in predict_match: {e}")
+        print(traceback.format_exc())
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/predict/quick', methods=['POST'])
+def predict_quick():
+    """
+    Quick prediction with minimal data
+
+    Expected JSON body:
+    {
+        "home_team": "Arsenal",
+        "away_team": "Chelsea",
+        "home_odds": 2.10,
+        "draw_odds": 3.40,
+        "away_odds": 3.60
+    }
+    """
+    try:
+        data = request.get_json()
+
+        # Validate required fields
+        required_fields = ['home_team', 'away_team', 'home_odds', 'draw_odds', 'away_odds']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({'error': f'Missing required field: {field}'}), 400
+
+        # Use quick_predict convenience function
+        result = quick_predict(
+            home_team=data['home_team'],
+            away_team=data['away_team'],
+            home_odds=data['home_odds'],
+            draw_odds=data['draw_odds'],
+            away_odds=data['away_odds'],
+            league=data.get('league'),
+            home_form=data.get('home_form'),
+            away_form=data.get('away_form'),
+            home_league_position=data.get('home_league_position'),
+            away_league_position=data.get('away_league_position'),
+            is_cup_match=data.get('is_cup_match', False),
+            home_matches_last_14_days=data.get('home_matches_last_14_days', 0),
+            away_matches_last_14_days=data.get('away_matches_last_14_days', 0),
+        )
+
+        return jsonify({
+            'home_team': result.home_team,
+            'away_team': result.away_team,
+            'predicted_score': result.predicted_score,
+            'predicted_winner': result.predicted_winner,
+            'home_win_probability': result.home_win_probability,
+            'draw_probability': result.draw_probability,
+            'away_win_probability': result.away_win_probability,
+            'dimension_scores': result.dimension_scores,
+            'overall_confidence': result.overall_confidence,
+            'key_insights': result.key_insights,
+            'risk_factors': result.risk_factors,
+            'recommended_bet': result.recommended_bet,
+            'bet_confidence': result.bet_confidence,
+        })
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/fetch/enhanced-match-data', methods=['POST'])
+def fetch_enhanced_match_data():
+    """
+    Fetch enhanced match data from external APIs
+    This requires API-Football to be configured
+
+    Expected JSON body:
+    {
+        "match_id": "fixture_id_from_api_football",
+        "home_team_id": 42,
+        "away_team_id": 47,
+        "league_id": 39
+    }
+    """
+    try:
+        data = request.get_json()
+        fetcher = get_api_fetcher()
+
+        # Fetch all available data
+        results = {}
+
+        # Fetch injuries (async)
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+
+        try:
+            if 'home_team_id' in data and 'league_id' in data:
+                results['home_injuries'] = loop.run_until_complete(
+                    fetcher.fetch_injuries(data['home_team_id'], data['league_id'])
+                )
+
+            if 'away_team_id' in data and 'league_id' in data:
+                results['away_injuries'] = loop.run_until_complete(
+                    fetcher.fetch_injuries(data['away_team_id'], data['league_id'])
+                )
+
+            if 'home_team_id' in data and 'away_team_id' in data:
+                results['h2h'] = loop.run_until_complete(
+                    fetcher.fetch_head_to_head(data['home_team_id'], data['away_team_id'])
+                )
+
+            if 'home_team_id' in data and 'league_id' in data:
+                results['home_stats'] = loop.run_until_complete(
+                    fetcher.fetch_team_stats(data['home_team_id'], data['league_id'])
+                )
+
+            if 'away_team_id' in data and 'league_id' in data:
+                results['away_stats'] = loop.run_until_complete(
+                    fetcher.fetch_team_stats(data['away_team_id'], data['league_id'])
+                )
+
+            if 'match_id' in data:
+                results['lineups'] = loop.run_until_complete(
+                    fetcher.fetch_lineups(data['match_id'])
+                )
+
+        finally:
+            loop.close()
+
+        return jsonify({
+            'success': True,
+            'data': results,
+            'cache_stats': fetcher.get_cache_stats()
+        })
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/cache/stats', methods=['GET'])
+def cache_stats():
+    """Get cache statistics"""
+    try:
+        fetcher = get_api_fetcher()
+        return jsonify(fetcher.get_cache_stats())
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/cache/clear', methods=['POST'])
+def cache_clear():
+    """Clear cache (all or specific category)"""
+    try:
+        data = request.get_json() or {}
+        category = data.get('category')
+        fetcher = get_api_fetcher()
+        fetcher.clear_cache(category)
+        return jsonify({
+            'success': True,
+            'message': f'Cache cleared for: {category or "all"}'
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+if __name__ == '__main__':
+    port = int(os.getenv('PYTHON_ENGINE_PORT', 8000))
+    debug = os.getenv('PYTHON_ENGINE_DEBUG', 'False').lower() == 'true'
+
+    print("=" * 60)
+    print("  Football Prediction Engine - Flask Server")
+    print("=" * 60)
+    print(f"  Starting on port {port}...")
+    print(f"  Debug mode: {debug}")
+    print(f"  API-Football configured: {bool(os.getenv('API_FOOTBALL_KEY'))}")
+    print("=" * 60)
+
+    app.run(host='0.0.0.0', port=port, debug=debug)

@@ -1,0 +1,200 @@
+
+============================================================
+fetch_match_data_sync called
+Match: Real Madrid vs Barcelona
+League: La Liga
+Time: 1774245485.7132313
+API_FOOTBALL_KEY = None
+About to call asyncio.run...
+asyncio.run completed
+data_source = simulated-realtime
+h2h_matches = 10
+
+============================================================
+fetch_match_data_sync called
+Match: Real Madrid vs Barcelona
+League: La Liga
+Time: 1774246287.627254
+API_FOOTBALL_KEY = ae555cb14dmshf5df4f19cd1e8a6p16f7fajsnb5851f0fefe1
+
+============================================================
+fetch_match_data_sync called
+Match: Real Madrid vs Barcelona
+League: La Liga
+Time: 1774246396.996341
+API_FOOTBALL_KEY = ae555cb14dmshf5df4f19cd1e8a6p16f7fajsnb5851f0fefe1
+
+============================================================
+fetch_match_data_sync called
+Match: Real Madrid vs Barcelona
+League: La Liga
+Time: 1774247758.4125886
+API_FOOTBALL_KEY = ae555cb14dmshf5df4f19cd1e8a6p16f7fajsnb5851f0fefe1
+
+============================================================
+fetch_match_data_sync called
+Match: Oldham Athletic vs Notts County
+League: League 2
+Time: 1774247897.8456714
+API_FOOTBALL_KEY = ae555cb14dmshf5df4f19cd1e8a6p16f7fajsnb5851f0fefe1
+
+============================================================
+fetch_match_data_sync called
+Match: Real Madrid vs Barcelona
+League: La Liga
+Time: 1774247968.84037
+API_FOOTBALL_KEY = ae555cb14dmshf5df4f19cd1e8a6p16f7fajsnb5851f0fefe1
+
+============================================================
+fetch_match_data_sync called
+Match: Real Madrid vs Barcelona
+League: La Liga
+Time: 1774248115.1901097
+API_FOOTBALL_KEY = ae555cb14dmshf5df4f19cd1e8a6p16f7fajsnb5851f0fefe1
+
+============================================================
+fetch_match_data_sync called
+Match: Real Madrid vs Barcelona
+League: La Liga
+Time: 1774248163.2034526
+API_FOOTBALL_KEY = ae555cb14dmshf5df4f19cd1e8a6p16f7fajsnb5851f0fefe1
+
+============================================================
+fetch_match_data_sync called
+Match: Union Berlin vs Werder Bremen
+League: Frauen-Bundesliga
+Time: 1774249083.679306
+API_FOOTBALL_KEY = ae555cb14dmshf5df4f19cd1e8a6p16f7fajsnb5851f0fefe1
+
+============================================================
+fetch_match_data_sync called
+Match: Union Berlin vs Werder Bremen
+League: Bundesliga
+Time: 1774249342.1094265
+API_FOOTBALL_KEY = ae555cb14dmshf5df4f19cd1e8a6p16f7fajsnb5851f0fefe1
+
+============================================================
+fetch_match_data_sync called
+Match: Union Berlin vs Werder Bremen
+League: Bundesliga
+Time: 1774249364.1599967
+API_FOOTBALL_KEY = ae555cb14dmshf5df4f19cd1e8a6p16f7fajsnb5851f0fefe1
+
+============================================================
+fetch_match_data_sync called
+Match: Union Berlin vs Werder Bremen
+League: Bundesliga
+Time: 1774250004.1436586
+API_FOOTBALL_KEY = ae555cb14dmshf5df4f19cd1e8a6p16f7fajsnb5851f0fefe1
+
+============================================================
+fetch_match_data_sync called
+Match: Estudiantes vs Central C¨®rdoba
+League: Primera Divisi¨®n - Argentina
+Time: 1774250085.5635467
+API_FOOTBALL_KEY = ae555cb14dmshf5df4f19cd1e8a6p16f7fajsnb5851f0fefe1
+
+============================================================
+fetch_match_data_sync called
+Match: Union Berlin vs Werder Bremen
+League: Bundesliga
+Time: 1774253574.916299
+API_FOOTBALL_KEY = ae555cb14dmshf5df4f19cd1e8a6p16f7fajsnb5851f0fefe1
+
+============================================================
+fetch_match_data_sync called
+Match: Liverpool vs Man City
+League: Premier League
+Time: 1774314190.7464604
+API_FOOTBALL_KEY = ae555cb14dmshf5df4f19cd1e8a6p16f7fajsnb5851f0fefe1
+
+============================================================
+fetch_match_data_sync called
+Match: Liverpool vs Man City
+League: Premier League
+Time: 1774314839.6665149
+API_FOOTBALL_KEY = ae555cb14dmshf5df4f19cd1e8a6p16f7fajsnb5851f0fefe1
+
+============================================================
+fetch_match_data_sync called
+Match: Arsenal vs Chelsea
+League: Premier League
+Time: 1774315107.001649
+API_FOOTBALL_KEY = ae555cb14dmshf5df4f19cd1e8a6p16f7fajsnb5851f0fefe1
+
+============================================================
+fetch_match_data_sync called
+Match: Liverpool vs Man City
+League: Premier League
+Time: 1774317069.6304383
+API_FOOTBALL_KEY = ae555cb14dmshf5df4f19cd1e8a6p16f7fajsnb5851f0fefe1
+
+============================================================
+fetch_match_data_sync called
+Match: Liverpool vs Man City
+League: Premier League
+Time: 1774317244.0692186
+API_FOOTBALL_KEY = ae555cb14dmshf5df4f19cd1e8a6p16f7fajsnb5851f0fefe1
+
+============================================================
+fetch_match_data_sync called
+Match: Atl¨¦tico Hurac¨¢n vs Barracas Central
+League: Primera Divisi¨®n - Argentina
+Time: 1774318992.3884308
+API_FOOTBALL_KEY = ae555cb14dmshf5df4f19cd1e8a6p16f7fajsnb5851f0fefe1
+
+============================================================
+fetch_match_data_sync called
+Match: VfL Wolfsburg vs Lyon
+League: UEFA Champions League Women
+Time: 1774319598.8573344
+API_FOOTBALL_KEY = ae555cb14dmshf5df4f19cd1e8a6p16f7fajsnb5851f0fefe1
+
+============================================================
+fetch_match_data_sync called
+Match: Arsenal vs Chelsea
+League: UEFA Champions League Women
+Time: 1774320323.604956
+API_FOOTBALL_KEY = ae555cb14dmshf5df4f19cd1e8a6p16f7fajsnb5851f0fefe1
+
+============================================================
+fetch_match_data_sync called
+Match: VfL Wolfsburg vs Lyon
+League: UEFA Champions League Women
+Time: 1774320638.6522827
+API_FOOTBALL_KEY = ae555cb14dmshf5df4f19cd1e8a6p16f7fajsnb5851f0fefe1
+
+============================================================
+fetch_match_data_sync called
+Match: Arsenal vs Chelsea
+League: Premier League
+Time: 1774320906.0530643
+API_FOOTBALL_KEY = ae555cb14dmshf5df4f19cd1e8a6p16f7fajsnb5851f0fefe1
+
+============================================================
+fetch_match_data_sync called
+Match: Arsenal vs Chelsea
+League: Premier League
+Time: 1774320974.067061
+API_FOOTBALL_KEY = ae555cb14dmshf5df4f19cd1e8a6p16f7fajsnb5851f0fefe1
+
+============================================================
+fetch_match_data_sync called
+Match: Arsenal vs Chelsea
+League: Premier League
+Time: 1774321188.741992
+API_FOOTBALL_KEY = ae555cb14dmshf5df4f19cd1e8a6p16f7fajsnb5851f0fefe1
+
+============================================================
+fetch_match_data_sync called
+Match: Arsenal vs Chelsea
+League: Premier League
+Time: 1774321253.8260255
+API_FOOTBALL_KEY = ae555cb14dmshf5df4f19cd1e8a6p16f7fajsnb5851f0fefe1
+
+============================================================
+fetch_match_data_sync called
+Match: Arsenal vs Chelsea
+League: UEFA Champions League Women
+Time: 1774321448.1716096
+API_FOOTBALL_KEY = ae555cb14dmshf5df4f19cd1e8a6p16f7fajsnb5851f0fefe1

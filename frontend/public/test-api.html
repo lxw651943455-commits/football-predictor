@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API 连接测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-box {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .success {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #86efac;
+        }
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+        h1 {
+            color: #1f2937;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 API 连接测试</h1>
+
+    <div class="test-box">
+        <h2>测试 1: 健康检查</h2>
+        <button onclick="testHealth()">测试后端健康状态</button>
+        <div id="health-result" class="result">等待测试...</div>
+    </div>
+
+    <div class="test-box">
+        <h2>测试 2: 获取联赛列表</h2>
+        <button onclick="testLeagues()">测试联赛API</button>
+        <div id="leagues-result" class="result">等待测试...</div>
+    </div>
+
+    <div class="test-box">
+        <h2>测试 3: 获取比赛数据</h2>
+        <button onclick="testMatches()">测试比赛API</button>
+        <div id="matches-result" class="result">等待测试...</div>
+    </div>
+
+    <div class="test-box">
+        <h2>测试 4: 创建预测</h2>
+        <button onclick="testPrediction()">测试预测API</button>
+        <div id="prediction-result" class="result">等待测试...</div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://127.0.0.1:5000';
+
+        async function testHealth() {
+            const result = document.getElementById('health-result');
+            result.textContent = '测试中...';
+            result.className = 'result';
+
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+
+                result.textContent = `✅ 成功！\n\n${JSON.stringify(data, null, 2)}`;
+                result.className = 'result success';
+            } catch (error) {
+                result.textContent = `❌ 失败！\n\n错误: ${error.message}\n\n请确保后端运行在端口 5000`;
+                result.className = 'result error';
+            }
+        }
+
+        async function testLeagues() {
+            const result = document.getElementById('leagues-result');
+            result.textContent = '测试中...';
+            result.className = 'result';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/leagues`);
+                const data = await response.json();
+
+                result.textContent = `✅ 成功！\n\n获取到 ${data.leagues.length} 个联赛\n\n前5个:\n${data.leagues.slice(0, 5).map(l => l.name).join('\n')}`;
+                result.className = 'result success';
+            } catch (error) {
+                result.textContent = `❌ 失败！\n\n错误: ${error.message}`;
+                result.className = 'result error';
+            }
+        }
+
+        async function testMatches() {
+            const result = document.getElementById('matches-result');
+            result.textContent = '测试中...';
+            result.className = 'result';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/matches/today`);
+                const data = await response.json();
+
+                result.textContent = `✅ 成功！\n\n获取到 ${data.matches.length} 场比赛\n\n前3场:\n${data.matches.slice(0, 3).map(m => `${m.home_team} vs ${m.away_team} (${m.league})`).join('\n')}`;
+                result.className = 'result success';
+            } catch (error) {
+                result.textContent = `❌ 失败！\n\n错误: ${error.message}`;
+                result.className = 'result error';
+            }
+        }
+
+        async function testPrediction() {
+            const result = document.getElementById('prediction-result');
+            result.textContent = '测试中...';
+            result.className = 'result';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/predictions/create`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        home_team: 'Arsenal',
+                        away_team: 'Chelsea',
+                        league: 'Premier League',
+                        home_odds: 2.10,
+                        draw_odds: 3.40,
+                        away_odds: 3.60
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.prediction) {
+                    result.textContent = `✅ 成功！\n\n预测结果:\n比分: ${data.prediction.predicted_score}\n胜者: ${data.prediction.predicted_winner}\n信心度: ${(data.prediction.overall_confidence * 100).toFixed(1)}%`;
+                } else {
+                    result.textContent = `⚠️ 响应成功但无预测数据\n\n${JSON.stringify(data, null, 2)}`;
+                }
+                result.className = 'result success';
+            } catch (error) {
+                result.textContent = `❌ 失败！\n\n错误: ${error.message}`;
+                result.className = 'result error';
+            }
+        }
+
+        // 页面加载时自动运行健康检查
+        window.onload = () => {
+            console.log('页面已加载，API_BASE:', API_BASE);
+            testHealth();
+        };
+    </script>
+</body>
+</html>

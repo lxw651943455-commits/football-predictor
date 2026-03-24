@@ -1,0 +1,176 @@
+
+[2026-03-23 14:11:27.625998] PREDICT_MATCH ENTRY
+About to call fetch_match_data_sync
+fetch_match_data_sync returned
+data_source: simulated-realtime
+h2h count: 10
+
+[2026-03-23 14:13:16.995338] PREDICT_MATCH ENTRY
+About to call fetch_match_data_sync
+fetch_match_data_sync returned
+data_source: simulated-realtime
+h2h count: 10
+
+[2026-03-23 14:35:58.410284] PREDICT_MATCH ENTRY
+About to call fetch_match_data_sync
+fetch_match_data_sync returned
+data_source: simulated-realtime
+h2h count: 10
+
+============================================================
+PREDICT_MATCH CALLED
+Time: 1774247897.838542
+About to call fetch_match_data_sync
+fetch_match_data_sync returned
+data_source: simulated-realtime
+h2h count: 10
+
+[2026-03-23 14:39:28.839367] PREDICT_MATCH ENTRY
+About to call fetch_match_data_sync
+fetch_match_data_sync returned
+data_source: simulated-realtime
+h2h count: 10
+
+============================================================
+PREDICT_MATCH CALLED
+Time: 1774248115.1891096
+About to call fetch_match_data_sync
+fetch_match_data_sync returned
+data_source: simulated-realtime
+h2h count: 10
+
+============================================================
+PREDICT_MATCH CALLED
+Time: 1774248163.2024553
+About to call fetch_match_data_sync
+fetch_match_data_sync returned
+data_source: simulated-realtime
+h2h count: 10
+
+============================================================
+PREDICT_MATCH CALLED
+Time: 1774249083.6783054
+About to call fetch_match_data_sync
+fetch_match_data_sync returned
+data_source: simulated-realtime
+h2h count: 10
+
+============================================================
+PREDICT_MATCH CALLED
+Time: 1774249309.3025448
+
+============================================================
+PREDICT_MATCH CALLED
+Time: 1774249342.1094265
+About to call fetch_match_data_sync
+
+[2026-03-23 15:02:44.157998] PREDICT_MATCH ENTRY
+About to call fetch_match_data_sync
+fetch_match_data_sync returned
+data_source: simulated-realtime
+h2h count: 10
+fetch_match_data_sync returned
+data_source: simulated-realtime
+h2h count: 10
+
+[2026-03-23 15:13:24.141658] PREDICT_MATCH ENTRY
+About to call fetch_match_data_sync
+fetch_match_data_sync returned
+data_source: simulated-realtime
+h2h count: 10
+
+[2026-03-23 15:14:45.563546] PREDICT_MATCH ENTRY
+About to call fetch_match_data_sync
+fetch_match_data_sync returned
+data_source: simulated-realtime
+h2h count: 10
+
+[2026-03-23 16:12:54.914299] PREDICT_MATCH ENTRY
+About to call fetch_match_data_sync
+fetch_match_data_sync returned
+data_source: simulated-realtime
+h2h count: 10
+
+[2026-03-24 09:03:10.744971] PREDICT_MATCH ENTRY
+About to call fetch_match_data_sync
+fetch_match_data_sync returned
+data_source: simulated-realtime
+h2h count: 10
+
+[2026-03-24 09:13:59.666515] PREDICT_MATCH ENTRY
+About to call fetch_match_data_sync
+fetch_match_data_sync returned
+data_source: simulated-realtime
+h2h count: 10
+
+[2026-03-24 09:18:27.001649] PREDICT_MATCH ENTRY
+About to call fetch_match_data_sync
+fetch_match_data_sync returned
+data_source: simulated-realtime
+h2h count: 10
+
+[2026-03-24 09:51:09.628222] PREDICT_MATCH ENTRY
+About to call fetch_match_data_sync
+fetch_match_data_sync returned
+data_source: simulated-realtime
+h2h count: 10
+
+[2026-03-24 09:54:04.069218] PREDICT_MATCH ENTRY
+About to call fetch_match_data_sync
+fetch_match_data_sync returned
+data_source: simulated-realtime
+h2h count: 10
+
+[2026-03-24 10:23:12.387428] PREDICT_MATCH ENTRY
+About to call fetch_match_data_sync
+fetch_match_data_sync returned
+data_source: simulated-realtime
+h2h count: 10
+
+[2026-03-24 10:33:18.857334] PREDICT_MATCH ENTRY
+About to call fetch_match_data_sync
+fetch_match_data_sync returned
+data_source: simulated-realtime
+h2h count: 10
+
+[2026-03-24 10:45:23.595792] PREDICT_MATCH ENTRY
+About to call fetch_match_data_sync
+fetch_match_data_sync returned
+data_source: simulated-realtime
+h2h count: 10
+
+[2026-03-24 10:50:38.650276] PREDICT_MATCH ENTRY
+About to call fetch_match_data_sync
+fetch_match_data_sync returned
+data_source: simulated-realtime
+h2h count: 10
+
+[2026-03-24 10:55:06.053064] PREDICT_MATCH ENTRY
+About to call fetch_match_data_sync
+fetch_match_data_sync returned
+data_source: simulated-realtime
+h2h count: 10
+
+[2026-03-24 10:56:14.067061] PREDICT_MATCH ENTRY
+About to call fetch_match_data_sync
+fetch_match_data_sync returned
+data_source: simulated-realtime
+h2h count: 10
+
+[2026-03-24 10:59:48.741991] PREDICT_MATCH ENTRY
+About to call fetch_match_data_sync
+fetch_match_data_sync returned
+data_source: simulated-realtime
+h2h count: 10
+
+[2026-03-24 11:00:53.826025] PREDICT_MATCH ENTRY
+About to call fetch_match_data_sync
+fetch_match_data_sync returned
+data_source: simulated-realtime
+h2h count: 10
+
+[2026-03-24 11:04:08.170613] PREDICT_MATCH ENTRY
+About to call fetch_match_data_sync
+fetch_match_data_sync returned
+data_source: simulated-realtime
+h2h count: 10

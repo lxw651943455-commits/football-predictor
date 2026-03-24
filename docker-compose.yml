@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  # Backend API (Node.js)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: football-predictor-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+      - PORT=5000
+      - SQLITE_PATH=/app/data/football_predictor.sqlite
+      - PYTHON_ENGINE_URL=http://prediction-engine:8000
+      - THE_ODDS_API_KEY=${THE_ODDS_API_KEY}
+      - API_FOOTBALL_KEY=${API_FOOTBALL_KEY}
+      - CORS_ORIGIN=http://localhost:3000
+    volumes:
+      - ./backend:/app
+      - ./database:/app/data
+    depends_on:
+      - prediction-engine
+    networks:
+      - football-network
+    restart: unless-stopped
+
+  # Prediction Engine (Python/Flask)
+  prediction-engine:
+    build:
+      context: ./prediction-engine
+      dockerfile: Dockerfile
+    container_name: football-predictor-engine
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHON_ENGINE_PORT=8000
+      - THE_ODDS_API_KEY=${THE_ODDS_API_KEY}
+      - API_FOOTBALL_KEY=${API_FOOTBALL_KEY}
+    volumes:
+      - ./prediction-engine:/app
+    networks:
+      - football-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Frontend (React/Vite)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: football-predictor-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:5000
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - football-network
+    restart: unless-stopped
+
+networks:
+  football-network:
+    driver: bridge
+
+volumes:
+  database:
+    driver: local

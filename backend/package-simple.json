@@ -1,0 +1,16 @@
+{
+  "name": "football-predictor-backend-simple",
+  "version": "1.0.0",
+  "description": "Simple backend proxy for Football Predictor",
+  "main": "simple-server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node simple-server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "http-proxy-middleware": "^2.0.6"
+  }
+}
