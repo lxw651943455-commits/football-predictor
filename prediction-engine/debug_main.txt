@@ -174,3 +174,9 @@ About to call fetch_match_data_sync
 fetch_match_data_sync returned
 data_source: simulated-realtime
 h2h count: 10
+
+[2026-03-24 14:38:08.628917] PREDICT_MATCH ENTRY
+About to call fetch_match_data_sync
+fetch_match_data_sync returned
+data_source: simulated-realtime
+h2h count: 10

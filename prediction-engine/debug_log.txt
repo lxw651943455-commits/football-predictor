@@ -198,3 +198,10 @@ Match: Arsenal vs Chelsea
 League: UEFA Champions League Women
 Time: 1774321448.1716096
 API_FOOTBALL_KEY = ae555cb14dmshf5df4f19cd1e8a6p16f7fajsnb5851f0fefe1
+
+============================================================
+fetch_match_data_sync called
+Match: Real Madrid vs Barcelona
+League: UEFA Champions League Women
+Time: 1774334288.6304138
+API_FOOTBALL_KEY = ae555cb14dmshf5df4f19cd1e8a6p16f7fajsnb5851f0fefe1
